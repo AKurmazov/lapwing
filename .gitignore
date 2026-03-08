@@ -80,3 +80,6 @@ venv.bak/
 
 # ty
 .ty_cache/
+
+# Claude Code
+.claude/
