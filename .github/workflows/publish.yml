@@ -1,0 +1,30 @@
+name: publish
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    name: publish
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+
+      - name: setup uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: build
+        run: uv build
+
+      - name: publish
+        run: uv publish
