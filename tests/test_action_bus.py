@@ -1,5 +1,6 @@
 import asyncio
-from collections.abc import Awaitable, Callable
+from collections.abc import Callable, Coroutine
+from typing import Any
 from dataclasses import dataclass
 
 import pytest
@@ -45,7 +46,7 @@ async def test_middleware_runs_in_order() -> None:
     order: list[str] = []
 
     async def first_middleware(
-        action: SomeAction, call_next: Callable[[SomeAction], Awaitable[int]]
+        action: SomeAction, call_next: Callable[[SomeAction], Coroutine[Any, Any, int]]
     ) -> int:
         order.append("first_before")
         result = await call_next(action)
@@ -53,7 +54,7 @@ async def test_middleware_runs_in_order() -> None:
         return result
 
     async def second_middleware(
-        action: SomeAction, call_next: Callable[[SomeAction], Awaitable[int]]
+        action: SomeAction, call_next: Callable[[SomeAction], Coroutine[Any, Any, int]]
     ) -> int:
         order.append("second_before")
         result = await call_next(action)
@@ -80,7 +81,7 @@ async def test_middleware_runs_in_order() -> None:
 
 async def test_middleware_can_modify_result() -> None:
     async def double_result(
-        action: SomeAction, call_next: Callable[[SomeAction], Awaitable[int]]
+        action: SomeAction, call_next: Callable[[SomeAction], Coroutine[Any, Any, int]]
     ) -> int:
         result = await call_next(action)
         return result * 2

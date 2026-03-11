@@ -1,12 +1,12 @@
 import asyncio
-from collections.abc import Awaitable, Callable
+from collections.abc import Callable, Coroutine
 from typing import Any
 
 from ._exceptions import DuplicateHandlerError, NoHandlerError
 from ._types import Action
 
-type HandlerFunc = Callable[[Any], Awaitable[Any]]
-type MiddlewareFunc = Callable[[Any, Callable[[Any], Awaitable[Any]]], Awaitable[Any]]
+type HandlerFunc = Callable[[Any], Coroutine[Any, Any, Any]]
+type MiddlewareFunc = Callable[[Any, HandlerFunc], Coroutine[Any, Any, Any]]
 
 
 class ActionBus:
