@@ -26,6 +26,8 @@ All operations are async-first and return `asyncio.Task`, giving the caller cont
 
 Middlewares wrap the handler pipeline in list order — `middlewares[0]` is outermost.
 
+> **NOTE:** Middlewares apply to all action types on a bus and must preserve the return type of each concrete action's handler.
+
 ```python
 from dataclasses import dataclass
 from lapwing import Action, ActionBus
