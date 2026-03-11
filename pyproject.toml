@@ -7,10 +7,8 @@ name = "lapwing"
 version = "0.1.0"
 description = "Lightweight async message-passing building blocks: an action bus and an event bus"
 readme = "README.md"
-requires-python = ">=3.14"
-dependencies = [
-    "pydantic>=2.12.5",
-]
+requires-python = ">=3.13"
+dependencies = []
 authors = [{ name = "Alexander Kurmazov", email = "akurmazov2001@gmail.com" }]
 maintainers = [{ name = "Alexander Kurmazov", email = "akurmazov2001@gmail.com" }]
 
@@ -39,7 +37,7 @@ skip_covered = true
 fail_under = 100
 
 [tool.ruff]
-target-version = "py314"
+target-version = "py313"
 
 [tool.ruff.lint]
 fixable = ["ALL"]

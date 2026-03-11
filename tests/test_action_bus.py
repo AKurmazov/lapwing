@@ -1,15 +1,18 @@
 import asyncio
 from collections.abc import Awaitable, Callable
+from dataclasses import dataclass
 
 import pytest
 
 from lapwing import Action, ActionBus, DuplicateHandlerError, NoHandlerError
 
 
+@dataclass
 class SomeAction(Action[int]):
     value: int
 
 
+@dataclass
 class OtherAction(Action[str]):
     value: str
 

@@ -1,16 +1,12 @@
-from __future__ import annotations
-
 import asyncio
 from collections.abc import Awaitable, Callable
-from typing import Any, TypeVar
+from typing import Any
 
 from ._exceptions import DuplicateHandlerError, NoHandlerError
-from ._types import Action, T
+from ._types import Action
 
-HandlerFunc = Callable[[Any], Awaitable[Any]]
-MiddlewareFunc = Callable[[Any, Callable[[Any], Awaitable[Any]]], Awaitable[Any]]
-
-A = TypeVar("A", bound=Action[Any])
+type HandlerFunc = Callable[[Any], Awaitable[Any]]
+type MiddlewareFunc = Callable[[Any, Callable[[Any], Awaitable[Any]]], Awaitable[Any]]
 
 
 class ActionBus:
@@ -27,7 +23,7 @@ class ActionBus:
             list(reversed(middlewares)) if middlewares else []
         )
 
-    def handler(self, action_type: type[A]) -> Callable[[HandlerFunc], HandlerFunc]:
+    def handler[A: Action[Any]](self, action_type: type[A]) -> Callable[[HandlerFunc], HandlerFunc]:
         """Registers a single async handler for the given action type.
 
         Args:
@@ -73,7 +69,7 @@ class ActionBus:
             pipeline = step
         return pipeline
 
-    def dispatch(self, action: Action[T]) -> asyncio.Task[T]:
+    def dispatch[T](self, action: Action[T]) -> asyncio.Task[T]:
         """Dispatches an action, returning an asyncio.Task.
 
         Raises NoHandlerError eagerly before creating a task if no handler is registered.

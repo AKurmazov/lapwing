@@ -1,14 +1,17 @@
 import asyncio
+from dataclasses import dataclass
 
 import pytest
 
 from lapwing import Event, EventBus
 
 
+@dataclass
 class SomeEvent(Event):
     id: str
 
 
+@dataclass
 class OtherEvent(Event):
     id: str
 

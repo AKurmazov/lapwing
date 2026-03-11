@@ -12,9 +12,9 @@ All operations are async-first and return `asyncio.Task`, giving the caller cont
 
 ## Key Primitives
 
-**Action**: A Pydantic `BaseModel` subclass carrying a phantom type parameter `T` — used only by the type checker to annotate what the handler returns. Define one per action.
+**Action**: A `@dataclass` subclass carrying a phantom type parameter `T` — used only by the type checker to annotate what the handler returns. Define one per action.
 
-**Event**: A Pydantic `BaseModel` subclass representing something that has happened. Multiple listeners may react to the same event.
+**Event**: A `@dataclass` subclass representing something that has happened. Multiple listeners may react to the same event.
 
 **ActionBus**: Dispatches an action to exactly one registered async handler. Raises `NoHandlerError` eagerly if no handler is registered. Supports an optional middleware pipeline.
 
@@ -27,8 +27,10 @@ All operations are async-first and return `asyncio.Task`, giving the caller cont
 Middlewares wrap the handler pipeline in list order — `middlewares[0]` is outermost.
 
 ```python
+from dataclasses import dataclass
 from lapwing import Action, ActionBus
 
+@dataclass
 class CreateUser(Action[int]):
     username: str
     email: str
@@ -52,8 +54,10 @@ user_id = await bus.dispatch(CreateUser(username="alice", email="alice@example.c
 ### EventBus
 
 ```python
+from dataclasses import dataclass
 from lapwing import Event, EventBus
 
+@dataclass
 class UserCreated(Event):
     user_id: int
 
@@ -78,4 +82,4 @@ uv add lapwing
 
 ## Requirements
 
-Python 3.14+, Pydantic v2.
+Python 3.13+
