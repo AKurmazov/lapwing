@@ -13,7 +13,9 @@ class EventBus:
     def __init__(self) -> None:
         self._listeners: dict[type, list[ListenerFunc]] = {}
 
-    def listener[E: Event](self, event_type: type[E]) -> Callable[[ListenerFunc], ListenerFunc]:
+    def listener[E: Event](
+        self, event_type: type[E]
+    ) -> Callable[[ListenerFunc], ListenerFunc]:
         """Registers an async listener for the given event type.
 
         Multiple listeners may be registered for the same event type.

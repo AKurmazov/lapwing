@@ -23,7 +23,9 @@ class ActionBus:
             list(reversed(middlewares)) if middlewares else []
         )
 
-    def handler[A: Action[Any]](self, action_type: type[A]) -> Callable[[HandlerFunc], HandlerFunc]:
+    def handler[A: Action[Any]](
+        self, action_type: type[A]
+    ) -> Callable[[HandlerFunc], HandlerFunc]:
         """Registers a single async handler for the given action type.
 
         Args:
