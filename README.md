@@ -12,9 +12,9 @@ All operations are async-first and return `asyncio.Task`, giving the caller cont
 
 ## Key Primitives
 
-**Action**: A `@dataclass` subclass carrying a phantom type parameter `T` — used only by the type checker to annotate what the handler returns. Define one per action.
+**Action**: A subclass carrying a phantom type parameter `T` — used only by the type checker to annotate what the handler returns. Define one per action.
 
-**Event**: A `@dataclass` subclass representing something that has happened. Multiple listeners may react to the same event.
+**Event**: A subclass representing something that has happened. Multiple listeners may react to the same event.
 
 **ActionBus**: Dispatches an action to exactly one registered async handler. Raises `NoHandlerError` eagerly if no handler is registered. Supports an optional middleware pipeline.
 
@@ -30,20 +30,25 @@ Middlewares wrap the handler pipeline in list order — `middlewares[0]` is oute
 
 ```python
 from dataclasses import dataclass
+
 from lapwing import Action, ActionBus
+
 
 @dataclass
 class CreateUser(Action[int]):
     username: str
     email: str
 
+
 async def logging_middleware(action, call_next):
     print(f"Dispatching {type(action).__name__}")
     result = await call_next(action)
-    print(f"Done")
+    print("Done")
     return result
 
+
 bus = ActionBus(middlewares=[logging_middleware])
+
 
 @bus.handler(CreateUser)
 async def handle_create_user(action: CreateUser) -> int:
@@ -57,17 +62,22 @@ user_id = await bus.dispatch(CreateUser(username="alice", email="alice@example.c
 
 ```python
 from dataclasses import dataclass
+
 from lapwing import Event, EventBus
+
 
 @dataclass
 class UserCreated(Event):
     user_id: int
 
+
 bus = EventBus()
+
 
 @bus.listener(UserCreated)
 async def send_welcome_email(event: UserCreated) -> None:
     await mailer.send_welcome(event.user_id)
+
 
 @bus.listener(UserCreated)
 async def write_audit_log(event: UserCreated) -> None:

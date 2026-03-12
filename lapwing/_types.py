@@ -1,7 +1,3 @@
-from dataclasses import dataclass
-
-
-@dataclass
 class Action[T]:
     """Base class for all actions.
 
@@ -10,6 +6,5 @@ class Action[T]:
     """
 
 
-@dataclass
 class Event:
     """Base class for all events."""
