@@ -55,6 +55,7 @@ async def handle_create_user(action: CreateUser) -> int:
     user = await db.insert(action.username, action.email)
     return user.id
 
+
 user_id = await bus.dispatch(CreateUser(username="alice", email="alice@example.com"))
 ```
 
@@ -82,6 +83,7 @@ async def send_welcome_email(event: UserCreated) -> None:
 @bus.listener(UserCreated)
 async def write_audit_log(event: UserCreated) -> None:
     await audit.log(f"User {event.user_id} created")
+
 
 await bus.emit(UserCreated(user_id=42))
 ```
