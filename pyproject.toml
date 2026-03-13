@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "lapwing"
-version = "0.1.0"
+version = "1.0.0"
 description = "Lightweight async message-passing building blocks: an action bus and an event bus"
 readme = "README.md"
 requires-python = ">=3.13"
