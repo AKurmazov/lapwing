@@ -6,20 +6,20 @@ from ._exceptions import DuplicateHandlerError, NoHandlerError
 from ._types import Action
 
 type HandlerFunc = Callable[[Any], Coroutine[Any, Any, Any]]
-type MiddlewareFunc = Callable[[Any, HandlerFunc], Coroutine[Any, Any, Any]]
+type HandlerMiddlewareFunc = Callable[[Any, HandlerFunc], Coroutine[Any, Any, Any]]
 
 
 class ActionBus:
     """Dispatches actions to exactly one registered async handler, with optional middlewares."""
 
-    def __init__(self, middlewares: list[MiddlewareFunc] | None = None) -> None:
+    def __init__(self, middlewares: list[HandlerMiddlewareFunc] | None = None) -> None:
         """Args:
         middlewares: Pipeline applied to every dispatched action. Middlewares wrap
             each other in list order: ``middlewares[0]`` wraps ``middlewares[1]``,
             which wraps the handler.
         """
         self._handlers: dict[type, HandlerFunc] = {}
-        self._middlewares: list[MiddlewareFunc] = (
+        self._middlewares: list[HandlerMiddlewareFunc] = (
             list(reversed(middlewares)) if middlewares else []
         )
 
@@ -64,7 +64,7 @@ class ActionBus:
             async def step(
                 action: Any,
                 _inner: HandlerFunc = inner,
-                _mw: MiddlewareFunc = current_mw,
+                _mw: HandlerMiddlewareFunc = current_mw,
             ) -> Any:
                 return await _mw(action, _inner)
 

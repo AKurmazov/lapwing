@@ -18,7 +18,7 @@ All operations are async-first and return `asyncio.Task`, giving the caller cont
 
 **ActionBus**: Dispatches an action to exactly one registered async handler. Raises `NoHandlerError` eagerly if no handler is registered. Supports an optional middleware pipeline.
 
-**EventBus**: Broadcasts an event to all registered async listeners concurrently via `asyncio.TaskGroup`. Succeeds silently if no listeners are registered. Raises `ExceptionGroup` if any listener fails.
+**EventBus**: Broadcasts an event to all registered async listeners concurrently via `asyncio.TaskGroup`. Succeeds silently if no listeners are registered. Raises `ExceptionGroup` if any listener fails. Supports an optional middleware pipeline applied independently to each listener.
 
 ## Usage
 
@@ -61,6 +61,10 @@ user_id = await bus.dispatch(CreateUser(username="alice", email="alice@example.c
 
 ### EventBus
 
+Middlewares wrap each listener independently in list order — `middlewares[0]` is outermost.
+
+> **NOTE:** Middlewares apply to every listener on a bus and must preserve the return type of each concrete event's listener (`None`). Each listener gets its own pipeline; a short-circuit or failure in one does not affect others.
+
 ```python
 from dataclasses import dataclass
 
@@ -72,7 +76,12 @@ class UserCreated(Event):
     user_id: int
 
 
-bus = EventBus()
+async def logging_middleware(event, call_next):
+    print(f"Handling {type(event).__name__}")
+    await call_next(event)
+
+
+bus = EventBus(middlewares=[logging_middleware])
 
 
 @bus.listener(UserCreated)
